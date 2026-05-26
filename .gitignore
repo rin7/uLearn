@@ -1,0 +1,13 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+
+# Docker volumes
+ulearn_mysql_data/
+
+# Notes
+_notes/

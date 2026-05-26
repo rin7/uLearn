@@ -1,0 +1,40 @@
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    container_name: ulearn-web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./ulearn:/var/www/html/ulearn
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mariadb:10.5
+    container_name: ulearn-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: ulearn
+      MYSQL_USER: ulearn_user
+      MYSQL_PASSWORD: ulearn_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ulearn_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+
+volumes:
+  ulearn_mysql_data:

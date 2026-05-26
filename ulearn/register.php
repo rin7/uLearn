@@ -1,0 +1,354 @@
+<?php require_once('Connections/connection.php'); ?>
+<?php
+function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+{
+  $theValue = (!get_magic_quotes_gpc()) ? addslashes($theValue) : $theValue;
+
+  switch ($theType) {
+    case "text":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;    
+    case "long":
+    case "int":
+      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+      break;
+    case "double":
+      $theValue = ($theValue != "") ? "'" . doubleval($theValue) . "'" : "NULL";
+      break;
+    case "date":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;
+    case "defined":
+      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+      break;
+  }
+  return $theValue;
+}
+
+$editFormAction = $_SERVER['PHP_SELF'];
+if (isset($_SERVER['QUERY_STRING'])) {
+  $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
+}
+
+if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form2")) {
+  $insertSQL = sprintf("INSERT INTO students (FName, LName, Gender, SSN, LAddress, PAddress, EMail, Tel, IME, FSEU, Ethnicity, password, SUserName, SATScore) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                       GetSQLValueString($_POST['fname'], "text"),
+                       GetSQLValueString($_POST['lname'], "text"),
+                       GetSQLValueString($_POST['gender'], "text"),
+                       GetSQLValueString($_POST['ssn'], "text"),
+                       GetSQLValueString($_POST['laddress'], "text"),
+                       GetSQLValueString($_POST['paddress'], "text"),
+                       GetSQLValueString($_POST['email'], "text"),
+                       GetSQLValueString($_POST['tel'], "text"),
+                       GetSQLValueString($_POST['IME'], "text"),
+                       GetSQLValueString($_POST['FSE'], "text"),
+                       GetSQLValueString($_POST['ethnicity'], "text"),
+                       GetSQLValueString($_POST['password'], "text"),
+                       GetSQLValueString($_POST['UserName'], "text"),
+                       GetSQLValueString($_POST['sat'], "text"));
+
+  mysql_select_db($database_connection, $connection);
+  $Result1 = mysql_query($insertSQL, $connection) or die(mysql_error());
+
+  $insertGoTo = "register2.php";
+  if (isset($_SERVER['QUERY_STRING'])) {
+    $insertGoTo .= (strpos($insertGoTo, '?')) ? "&" : "?";
+    $insertGoTo .= $_SERVER['QUERY_STRING'];
+  }
+  header(sprintf("Location: %s", $insertGoTo));
+}
+?>
+<!-- Provided by MyFreeTemplates.com -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Welcome to ULearn
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+
+<style type="text/css">
+<!--
+.style2 {color: #A0BFD0}
+.style8 {color: #658393; font-size: 24px; }
+.style9 {font-size: 16px}
+.style10 {
+	color: #FF0000;
+	font-size: 16px;
+}
+.style12 {font-size: 14px}
+.style13 {font-size: 12px}
+.style14 {font-size: 14}
+.style15 {color: #FF0000; font-size: 14px; }
+-->
+</style>
+<script language="JavaScript" type="text/JavaScript">
+<!--
+
+
+
+
+
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_nbGroup(event, grpName) { //v6.0
+  var i,img,nbArr,args=MM_nbGroup.arguments;
+  if (event == "init" && args.length > 2) {
+    if ((img = MM_findObj(args[2])) != null && !img.MM_init) {
+      img.MM_init = true; img.MM_up = args[3]; img.MM_dn = img.src;
+      if ((nbArr = document[grpName]) == null) nbArr = document[grpName] = new Array();
+      nbArr[nbArr.length] = img;
+      for (i=4; i < args.length-1; i+=2) if ((img = MM_findObj(args[i])) != null) {
+        if (!img.MM_up) img.MM_up = img.src;
+        img.src = img.MM_dn = args[i+1];
+        nbArr[nbArr.length] = img;
+    } }
+  } else if (event == "over") {
+    document.MM_nbOver = nbArr = new Array();
+    for (i=1; i < args.length-1; i+=3) if ((img = MM_findObj(args[i])) != null) {
+      if (!img.MM_up) img.MM_up = img.src;
+      img.src = (img.MM_dn && args[i+2]) ? args[i+2] : ((args[i+1])? args[i+1] : img.MM_up);
+      nbArr[nbArr.length] = img;
+    }
+  } else if (event == "out" ) {
+    for (i=0; i < document.MM_nbOver.length; i++) {
+      img = document.MM_nbOver[i]; img.src = (img.MM_dn) ? img.MM_dn : img.MM_up; }
+  } else if (event == "down") {
+    nbArr = document[grpName];
+    if (nbArr)
+      for (i=0; i < nbArr.length; i++) { img=nbArr[i]; img.src = img.MM_up; img.MM_dn = 0; }
+    document[grpName] = nbArr = new Array();
+    for (i=2; i < args.length-1; i+=2) if ((img = MM_findObj(args[i])) != null) {
+      if (!img.MM_up) img.MM_up = img.src;
+      img.src = img.MM_dn = (args[i+1])? args[i+1] : img.MM_up;
+      nbArr[nbArr.length] = img;
+  } }
+}
+
+function MM_validateForm() { //v4.0
+  var i,p,q,nm,test,num,min,max,errors='',args=MM_validateForm.arguments;
+  for (i=0; i<(args.length-2); i+=3) { test=args[i+2]; val=MM_findObj(args[i]);
+    if (val) { nm=val.name; if ((val=val.value)!="") {
+      if (test.indexOf('isEmail')!=-1) { p=val.indexOf('@');
+        if (p<1 || p==(val.length-1)) errors+='- '+nm+' must contain an e-mail address.\n';
+      } else if (test!='R') { num = parseFloat(val);
+        if (isNaN(val)) errors+='- '+nm+' must contain a number.\n';
+        if (test.indexOf('inRange') != -1) { p=test.indexOf(':');
+          min=test.substring(8,p); max=test.substring(p+1);
+          if (num<min || max<num) errors+='- '+nm+' must contain a number between '+min+' and '+max+'.\n';
+    } } } else if (test.charAt(0) == 'R') errors += '- '+nm+' is required.\n'; }
+  } if (errors) alert('The following error(s) occurred:\n'+errors);
+  document.MM_returnValue = (errors == '');
+}
+//-->
+</script>
+</head>
+
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onLoad="MM_preloadImages('images/home_s.gif','images/about_s.gif','images/schedule_s.gif','images/contact_s.gif','images/help_s.gif')">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr> 
+    <td rowspan="6" valign="top">&nbsp;</td>
+    <td width="42" rowspan="6" valign="top" background="images/sidebg_left.gif">&nbsp;</td>
+    <td width="670" background="images/tabletopbg1.gif"><img src="images/tabletopbg1.gif" width="1" height="4"></td>
+    <td width="46" rowspan="6" valign="top" background="images/sidebg_right.gif"><img src="images/sidebg_right.gif" width="46" height="3"></td>
+    <td rowspan="6" valign="top">&nbsp;</td>
+  </tr>
+  <tr> 
+    <td width="670" height="0"> <table width="676" border="0" cellpadding="0" cellspacing="0">
+        <tr> 
+          <td rowspan="2" background="images/pixi_greyblue.gif"><img src="images/logo.gif" width="166" height="92"></td>
+          <td colspan="2" background="images/pixi_greyblue.gif"><img src="images/pixi_greyblue.gif" width="1" height="1"></td>
+        </tr>
+        <tr> 
+          <td valign="bottom" background="images/top_b.gif"><span class="style2"><img src="images/top_curve.gif" width="22" height="31"><a href="index.php" target="_top" onClick="MM_nbGroup('down','group1','Home','images/home_s.gif',1)" onMouseOver="MM_nbGroup('over','Home','images/home_s.gif','',1)" onMouseOut="MM_nbGroup('out')"><img src="images/home.gif" alt="" name="Home" border="0" onload=""></a><a href="about.php" target="_top" onClick="MM_nbGroup('down','group1','about','images/about_s.gif',1)" onMouseOver="MM_nbGroup('over','about','images/about_s.gif','',1)" onMouseOut="MM_nbGroup('out')"><img src="images/about.gif" alt="" name="about" border="0" onload=""></a><a href="schedule.php" target="_top" onClick="MM_nbGroup('down','group1','schedule','images/schedule_s.gif',1)" onMouseOver="MM_nbGroup('over','schedule','images/schedule_s.gif','',1)" onMouseOut="MM_nbGroup('out')"><img src="images/schedule.gif" alt="" name="schedule" border="0" onload=""></a><a href="contact.php" target="_top" onClick="MM_nbGroup('down','group1','contact','images/contact_s.gif',1)" onMouseOver="MM_nbGroup('over','contact','images/contact_s.gif','',1)" onMouseOut="MM_nbGroup('out')"><img name="contact" src="images/contact.gif" border="0" alt="" onLoad=""></a><a href="help.php" target="_top" onClick="MM_nbGroup('down','group1','help','images/help_s.gif',1)" onMouseOver="MM_nbGroup('over','help','images/help_s.gif','',1)" onMouseOut="MM_nbGroup('out')"><img name="help" src="images/help.gif" border="0" alt="" onLoad=""></a></span></td>
+          <td background="images/pixi_lightblue.gif"><span class="style2"></span></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr> 
+    <td width="670" height="4" background="images/pixi_lightblue.gif"><img src="images/pixi_lightblue.gif" width="1" height="1"></td>
+  </tr>
+  <tr> 
+    <td width="670" background="images/pixi_lightblue.gif"> <div align="left"> 
+        <table width="676" border="0" cellpadding="0" cellspacing="0">
+          <tr> 
+            <td width="434" align="left"><img src="images/toppic1.gif" width="187" height="122"><img src="images/toppic2.gif" width="167" height="122"><img src="images/toppic2a.gif" width="80" height="122"></td>
+            <td width="242" align="right"><img src="images/toppic3.gif" width="242" height="122"></td>
+          </tr>
+        </table>
+    </div></td>
+  </tr>
+  <tr> 
+    <td width="670" height="4" background="images/pixi_lightblue.gif"><img src="images/pixi_lightblue.gif" width="1" height="1"></td>
+  </tr>
+  <tr> 
+    <td align="right" valign="top"><table width="676" border="0" cellpadding="0" cellspacing="0">
+        <tr> 
+          <td align="right" valign="top"><img src="images/midcurve.gif" width="192" height="17"><br> 
+            <table width="460" border="0" cellspacing="0">
+              <tr> 
+                <td width="461"> <h1 class="style8">Student Registration Form:</h1>
+                  <p class="style8">-<span class="style9">Please fill this form carefully, we need your information in near futher:</span></p>
+                  <form action="<?php echo $editFormAction; ?>" name="form2" method="POST">
+                    <table width="100%"  border="0" cellspacing="1" cellpadding="1">
+                      <tr>
+                        <td width="2%">&nbsp;</td>
+                        <td width="38%" align="right"><span class="style12">User Name:</span></td>
+                        <td width="39%" colspan="2"><input name="UserName" type="text" id="UserName"></td>
+                        <td width="16%" class="style10"><span class="style10 style12">*Required</span></td>
+                        <td width="5%">&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td align="right"><span class="style12">Password:</span></td>
+                        <td colspan="2"><input name="password" type="password" id="password"></td>
+                        <td class="style10"><span class="style10 style12">*Required</span></td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td align="right"><span class="style12">Confirm Password:</span></td>
+                        <td colspan="2"><input name="cpassword" type="password" id="cpassword"></td>
+                        <td class="style10"><span class="style10 style12">*Required</span></td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td align="right"><span class="style12">First Name:</span></td>
+                        <td colspan="2"><input name="fname" type="text" id="fname"></td>
+                        <td class="style10"><span class="style10 style12">*Required</span></td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td align="right"><span class="style12">Last Name: </span></td>
+                        <td colspan="2"><input name="lname" type="text" id="lname"></td>
+                        <td class="style10"><span class="style10 style12">*Required</span></td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td align="right"><span class="style12">Gender:</span></td>
+                        <td colspan="2"><select name="gender" id="gender">
+                          <option value="femaile">Female</option>
+                          <option value="male">Male</option>
+                        </select></td>
+                        <td class="style15">*Required</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td align="right"><span class="style12">Social Security Number: </span></td>
+                        <td colspan="2"><input name="ssn" type="text" id="ssn"></td>
+                        <td class="style10"><span class="style10 style12">*Required</span></td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td align="right" valign="top"><span class="style12">Local Address: </span></td>
+                        <td colspan="2"><textarea name="laddress" id="laddress"></textarea></td>
+                        <td class="style10 style14">&nbsp;</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td align="right" valign="top"><span class="style12">Permanent Address: </span></td>
+                        <td colspan="2"><textarea name="paddress" id="paddress"></textarea></td>
+                        <td valign="top" class="style10"><span class="style10 style12">*Required</span></td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td align="right"><span class="style12">Email Address: </span></td>
+                        <td colspan="2"><input name="email" type="text" id="email"></td>
+                        <td class="style10"><span class="style10 style12">*Required</span></td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td align="right"><span class="style12">Telephone Number: </span></td>
+                        <td colspan="2"><input name="tel" type="text" id="tel"></td>
+                        <td class="style10"><span class="style10 style12">*Required</span></td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td align="right"><span class="style12">Initial Mode of Entry:</span></td>
+                        <td colspan="2"><input name="IME" type="text" id="IME"></td>
+                        <td class="style10 style14">&nbsp;</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td align="right"><span class="style13">First Semester Enrolled at UL:</span></td>
+                        <td colspan="2"><input name="FSE" type="text" id="FSE"></td>
+                        <td class="style10 style14">&nbsp;</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td align="right"><span class="style12">Ethnicity:</span></td>
+                        <td colspan="2"><input name="ethnicity" type="text" id="ethnicity"></td>
+                        <td class="style10 style14">&nbsp;</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td align="right"><span class="style13">Scholastic Aptitude Test Scores:</span></td>
+                        <td colspan="2"><input name="sat" type="text" id="sat"></td>
+                        <td class="style10"><span class="style10 style12">*Required</span></td>
+                        <td>&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td><input type="reset" name="Reset" value="Reset"></td>
+                        <td><input name="Submit" type="submit" onClick="MM_validateForm('UserName','','R','ssn','','RisNum','email','','RisEmail','tel','','RisNum','sat','','RisNum','laddress','','R','password','','R','cpassword','','R');return document.MM_returnValue" value="Register"></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </table>
+                      
+                      <input type="hidden" name="MM_insert" value="form2">
+                  </form>                  <p>&nbsp; </p>
+                <p>&nbsp;</p></td>
+                <td width="15">&nbsp;</td>
+              </tr>
+          </table></td>
+          <td width="191" align="center" valign="top" background="images/pixi_greyblue.gif" class="sidetable"> 
+            <table width="100%" border="0" cellpadding="10" cellspacing="0" bordercolor="#A0BFD0">
+              <tr> 
+           
+              </tr>
+            </table>  
+          </td>
+        </tr>
+      </table> </td>
+  </tr>
+  <tr>
+    <td valign="top">&nbsp;</td>
+    <td valign="top" background="images/sidebg_left.gif">&nbsp;</td>
+    <td valign="top" background="images/pixi_lightblue.gif">&nbsp;&nbsp;&nbsp;&nbsp;<span class="baseline">&copy; 
+      2006 aRin. All rights reserved.<br>
+    </span></td>
+    <td valign="top" background="images/sidebg_right.gif">&nbsp;</td>
+    <td valign="top">&nbsp;</td>
+  </tr>
+</table>
+</body>
+</html>
